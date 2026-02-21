@@ -31,8 +31,10 @@ SEG_COLORS = {
 
 # ── Sidebar Filters ─────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://via.placeholder.com/220x60?text=NovaRetail", use_column_width=True)
-    st.title("📊 Filters")
+    st.markdown("## 🛍️ NovaRetail")
+    st.markdown("##### Executive Dashboard")
+    st.divider()
+    st.markdown("### 📊 Filters")
 
     segments = ["All"] + sorted(df["label"].dropna().unique().tolist())
     sel_seg = st.multiselect("Segment", segments[1:], default=segments[1:])
