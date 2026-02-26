@@ -218,11 +218,14 @@ with col8:
 with col9:
     decline_df = fdf[fdf["label"] == "Decline"]
     if not decline_df.empty:
-        d_trend = decline_df.groupby(pd.Grouper(key="TransactionDate", freq="M"))["PurchaseAmount"].sum().reset_index()
+        # Use daily frequency — all Decline data falls within a single month
+        d_trend = decline_df.groupby(pd.Grouper(key="TransactionDate", freq="D"))["PurchaseAmount"].sum().reset_index()
+        d_trend = d_trend[d_trend["PurchaseAmount"] > 0]  # drop empty days
         fig = px.line(d_trend, x="TransactionDate", y="PurchaseAmount",
-                      title="Revenue Trend – Decline Segment",
-                      labels={"PurchaseAmount": "Revenue ($)", "TransactionDate": "Month"},
-                      line_shape="spline", color_discrete_sequence=["#F44336"])
+                      title="Daily Revenue Trend – Decline Segment",
+                      labels={"PurchaseAmount": "Revenue ($)", "TransactionDate": "Date"},
+                      line_shape="spline", color_discrete_sequence=["#F44336"],
+                      markers=True)
         fig.update_traces(fill="tozeroy", fillcolor="rgba(244,67,54,0.1)")
         st.plotly_chart(fig, use_container_width=True)
     else:
